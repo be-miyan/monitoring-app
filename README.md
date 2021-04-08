@@ -20,5 +20,5 @@ motionを使用する場合の参考設定
 (motionは動体検知用パッケージ。ラズパイなどにインストール)
 
 ~~~ bash
-sudo apt-get install motion
+sudo aptinstall motion
 ~~~
