@@ -1,0 +1,160 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+      <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+        <div
+          class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+          <h1 class="h2">Dashboard</h1>
+          <div class="btn-toolbar mb-2 mb-md-0">
+            <!--<div class="btn-group mr-2">
+              <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
+              <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
+            </div>-->
+            <div class="dropdown">
+              <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" 
+               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span data-feather="calendar"></span>
+                {% firstof selected_period.name "Select period" %}
+              </button>
+              <div class="dropdown-menu dropdown-menu-right">
+{% for np in nonselected_periods %}
+                <a class="dropdown-item" href="{% url 'dashboard:home' np.name %}">{{ np.name }}</a>
+{% empty %}
+                no period
+{% endfor %}
+              </div>
+            </div>
+          </div> 
+        </div>
+        <div class="row">
+          <div class="col-lg-9 col-md-12">
+            <div class="row">
+              <div class="col-sm-6 col-xs-12">
+                <h4>気温</h4>
+                <canvas class="my-4" id="tempChart" width="900" height="380"></canvas>
+              </div>
+              <div class="col-sm-6 col-xs-12">
+                <h4>気圧</h4>
+                <canvas class="my-4" id="presChart" width="900" height="380"></canvas>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-6 col-xs-12">
+                <h4>湿度</h4>
+                <canvas class="my-4" id="humidChart" width="900" height="380"></canvas>
+              </div>
+              <div class="col-sm-6 col-xs-12">
+                <h4>照度</h4>
+                <canvas class="my-4" id="luxChart" width="900" height="380"></canvas>
+              </div>
+            </div>
+            <div class="col-12">
+              <h2>直近のデータ</h2>
+              <div class="table-responsive">
+                <table class="table table-striped table-sm">
+                  <thead>
+                    <tr>
+                      <th>時刻</th>
+                      <!-- <th>取得地</th> -->
+                      <th>気温(℃)</th>
+                      <th>気圧(hPa)</th>
+                      <th>湿度(%)</th>
+                      <th>照度(lm)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for environment in latest_environment_list %}
+                    <tr>
+                      <td>{{ environment.postdate|date:"H:i" }}</td>
+                      <!-- <td>{{ environment.place }}</td> -->
+                      <td>{{ environment.temperature }}</td>
+                      <td>{{ environment.pressure }}</td>
+                      <td>{{ environment.humidity }}</td>
+                      <td>{{ environment.lux }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                      <p>No environments are available.</p>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-12 mt-10 pt-10 anime-fadein">
+            <div class="h-30 mt-10">
+            <img src="http://raspberrypi:8081/" class="img-fluid rounded" vspace="10px" alt onerror="this.onerror = null; this.src='';">
+{% for photo in photos %}
+            <a href="{{ photo.image.url }}">
+              <img src="{{ photo.image.url }}" class="img-fluid rounded" vspace="10px" alt="{{ photo.postdate|date:"Y/m/d H:i" }}">
+            </a>
+            <!--<p>{{ photo.postdate|date:"Y/m/d H:i" }}</p>-->
+{% empty %}
+            <span> no image </span>
+{% endfor %}
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Icons -->
+  <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+  <script>
+    feather.replace()
+  </script>
+
+  <!-- Graphs -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+  <script>
+    function displayChart(name, color, data) {
+      var ctx = document.getElementById(name);
+      var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          {% if selected_period.isDailyData %}
+          labels: [{% for i in hour_avg %}"{{ i.0|date:"m/d" }}",{% endfor %}],
+          {% else %}
+          labels: [{% for i in hour_avg %}"{{ i.0|date:"H:i" }}",{% endfor %}],
+          {% endif %}
+    datasets: [{
+      data: data,
+      lineTension: 0,
+      backgroundColor: 'transparent',
+      borderColor: color,
+      borderWidth: 4,
+      pointBackgroundColor: color
+    }]
+      },
+    options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: false
+          }
+        }]
+      },
+      legend: {
+        display: false,
+        }
+    }
+    });
+}
+    displayChart("tempChart", '#007bff', [{% for i in hour_avg %}{% if i.2 is not None %}"{{ i.2|floatformat:"-2" }}"{% endif %}, {% endfor %}]);
+    displayChart("presChart", '#00ff7b', [{% for i in hour_avg %}{% if i.3 is not None %}"{{ i.3|floatformat:"-2" }}"{% endif %}, {% endfor %}]);
+    displayChart("humidChart", '#ff7b00', [{% for i in hour_avg %}{% if i.4 is not None %}"{{ i.4|floatformat:"-2" }}"{% endif %}, {% endfor %}]);
+    displayChart("luxChart", '#7bff00', [{% for i in hour_avg %}{% if i.5 is not None %}"{{ i.5|floatformat:"-2" }}"{% endif %}, {% endfor %}]);
+
+  </script>
+
+  <script>
+    const timer = 60000    // ミリ秒で間隔の時間を指定
+    window.addEventListener('load', function () {
+      setInterval('location.reload()', timer);
+    });
+  </script>
+{% endblock %}
