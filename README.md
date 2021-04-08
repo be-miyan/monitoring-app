@@ -14,6 +14,7 @@ data send script
 ## motion.conf
 
 motionを使用する場合の参考設定  
+画像をAPIにcurlで送信しています
 (motionは動体検知用パッケージ。ラズパイなどにインストールして使用してください)
 
 ~~~ bash
