@@ -6,9 +6,9 @@ http://[ホスト]/dashboard/home/
 
 ## API (django-rest-framework)
 
-画像  
+画像登録
 http://[ホスト]/dashboard/posts/photo/  
-取得データ  
+センサー取得データ登録  
 http://[ホスト]/dashboard/posts/record/
 
 ## TODO
