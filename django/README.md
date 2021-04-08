@@ -4,7 +4,7 @@
 
 http://[ホスト]/dashboard/home/  
 
-## API
+## API (django-rest-framework)
 
 画像  
 http://[ホスト]/dashboard/posts/photo/  
