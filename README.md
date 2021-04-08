@@ -1,4 +1,5 @@
 # monitoring-app
+自宅でラズパイから収集した情報(気温や画像など）をDBに登録してwebで表示するアプリを作って見た
 
 ## django/
 
@@ -9,13 +10,13 @@ django application
 ## script/
 
 data send script  
-データ送信用スクリプト
+ラズパイ上で動かすデータ送信用スクリプト
 
 ## motion.conf
 
 motionを使用する場合の参考設定  
 画像をAPIにcurlで送信しています
-(motionは動体検知用パッケージ。ラズパイなどにインストールして使用してください)
+(motionは動体検知用パッケージ。ラズパイなどにインストール)
 
 ~~~ bash
 sudo apt-get install motion
