@@ -1,12 +1,21 @@
 # monitoring-app
-自宅監視用アプリ
 
-## django
-django application 情報登録・表示アプリケーション
+## django/
 
-## shell
-data send script (shell/python3)
+django application   
+情報登録・表示アプリ  
+(詳細は django/README.md 参照)
+
+## script/
+
+data send script  
 データ送信用スクリプト
 
-## conf
-motionを使用する場合の参考設定
+## motion.conf
+
+motionを使用する場合の参考設定  
+(motionは動体検知用パッケージ。ラズパイなどにインストールして使用してください)
+
+~~~ bash
+sudo apt-get install motion
+~~~
