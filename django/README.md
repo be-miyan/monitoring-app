@@ -13,7 +13,6 @@ http://[ホスト]/dashboard/posts/record/
 
 ## TODO
 
-- django チュートリアルapp(polls) dell
 - view fix(def base)
 - グラフの文字切れ問題
 - model変数名fix(Enviroment -> record)
@@ -23,6 +22,6 @@ http://[ホスト]/dashboard/posts/record/
 
 - ログインページデザイン
 - 画像と取得データを表示する個別ページ（フィルタ機能あり）
-- 取得場所ごとにページ分ける
+- 取得値ごとにページ分ける
 - ユーザと取得場所の紐付け
 - フッター追加
