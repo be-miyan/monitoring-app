@@ -26,7 +26,7 @@ SECRET_KEY = '-+u1m$uz(8(2#kymf*2ifegio*9^1fayadf16oan63^-7jy#fk'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', 'raspberrypi', '192.168.11.201']
+ALLOWED_HOSTS = ['localhost', 'raspberrypi']
 
 
 # Application definition
